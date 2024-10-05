@@ -16,7 +16,7 @@ public class Pasaporte {
     @GeneratedValue
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderColumn
     private List<Seccion> secciones;
     private String nombre;

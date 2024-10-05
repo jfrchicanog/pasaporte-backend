@@ -36,7 +36,7 @@ public class UsuarioService {
     private final Logger log =Logger.getLogger(UsuarioService.class.getName());
 
     @Value("${baseURIOfFrontend}")
-    private String baseURIOfFrontend = "http://localhost:4200";
+    private String baseURIOfFrontend;
     @Value("${passwordresettoken.expiration}")
     private long passwordResetTokenExpiration = 0;
 
@@ -165,7 +165,7 @@ public class UsuarioService {
     }
 
     private void enviarMensajeParaReiniciarContrasnia(String email, String token) {
-        String uri = UriComponentsBuilder.fromHttpUrl(baseURIOfFrontend)
+        String uri = UriComponentsBuilder.fromHttpUrl(baseURIOfFrontend+"/reset-password")
                 .queryParam("token", token)
                 .build().toUriString();
 

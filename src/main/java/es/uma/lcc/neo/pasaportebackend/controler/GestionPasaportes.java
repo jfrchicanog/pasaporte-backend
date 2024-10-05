@@ -60,7 +60,23 @@ public class GestionPasaportes {
     }
 
     //- PUT /pasaporte/{id} (solo para editor)
+    @PutMapping("/{idPasaporte}")
+    public ResponseEntity<PasaporteDTO> modificarPasaporte(@PathVariable Long idPasaporte, @RequestBody PasaporteDTO pasaporte) {
+        pasaporte.setId(idPasaporte);
+        return ResponseEntity.ok(
+            mapper.pasaporte(
+                pasaporteService.modificarPasaporte(
+                    mapper.pasaporte(pasaporte)
+                )
+            )
+        );
+    }
+
     //- DELETE /pasaporte/{id} (solo para editor y administrador)
+    @DeleteMapping("/{idPasaporte}")
+    public void eliminarPasaporte(@PathVariable Long idPasaporte) {
+        pasaporteService.eliminarPasaporte(idPasaporte);
+    }
 
     @ExceptionHandler(PasaporteInexistente.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)

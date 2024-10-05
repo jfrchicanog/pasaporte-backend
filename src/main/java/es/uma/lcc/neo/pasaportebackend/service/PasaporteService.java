@@ -2,6 +2,7 @@ package es.uma.lcc.neo.pasaportebackend.service;
 
 import es.uma.lcc.neo.pasaportebackend.entity.Pasaporte;
 import es.uma.lcc.neo.pasaportebackend.entity.Seccion;
+import es.uma.lcc.neo.pasaportebackend.exception.PasaporteInexistente;
 import es.uma.lcc.neo.pasaportebackend.repository.PasaporteRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,22 @@ public class PasaporteService {
 
     public Pasaporte crearPasaporte(Pasaporte pasaporte) {
         pasaporte.setId(null);
+        if (pasaporte.getSecciones()!=null) {
+            pasaporte.getSecciones().forEach(s -> s.setId(null));
+        }
         return pasaporteRepo.save(pasaporte);
+    }
+
+    public Pasaporte modificarPasaporte(Pasaporte pasaporte) {
+        if (pasaporteRepo.existsById(pasaporte.getId())) {
+            return pasaporteRepo.save(pasaporte);
+        } else {
+            throw new PasaporteInexistente();
+        }
+    }
+
+    public void eliminarPasaporte(Long id) {
+        pasaporteRepo.deleteById(id);
     }
 
     public Seccion aniadirSeccionAPasaporte(Long idPasaporte, Seccion seccion) {

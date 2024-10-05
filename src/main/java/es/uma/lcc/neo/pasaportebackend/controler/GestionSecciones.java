@@ -33,6 +33,7 @@ public class GestionSecciones {
             )
         );
     }
+
     //- PUT /seccion/{idSeccion} (solo editor)
     //- DELETE /seccion/{idSeccion} (solo editor)
 }

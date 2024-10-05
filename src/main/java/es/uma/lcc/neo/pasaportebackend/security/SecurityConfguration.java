@@ -3,6 +3,7 @@ package es.uma.lcc.neo.pasaportebackend.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -32,8 +33,9 @@ public class SecurityConfguration {
                 .csrf(cs -> cs.disable())
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/login", "/passwordreset", "/forgottenpassword",
-                                    "/pasaporte/{dPasaporte}").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/login", "/passwordreset", "/forgottenpassword").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/pasaporte/{idPasaporte}").permitAll()
+                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
