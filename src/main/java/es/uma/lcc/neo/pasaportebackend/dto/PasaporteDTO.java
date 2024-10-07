@@ -16,7 +16,7 @@ public class PasaporteDTO {
     private String nombre;
     private String apellido1;
     private String apellido2;
-    private byte [] foto;
+    private String foto;
     // TODO: mostramos solo la edad?
     private Date fechaNacimiento;
     private List<SeccionDTO> secciones;

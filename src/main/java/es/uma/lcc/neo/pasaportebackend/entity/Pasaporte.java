@@ -23,7 +23,7 @@ public class Pasaporte {
     private String apellido1;
     private String apellido2;
     @Lob
-    private byte [] foto;
+    private byte[] foto;
     private Date fechaNacimiento;
 
 }
