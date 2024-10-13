@@ -10,10 +10,11 @@ import java.sql.Timestamp;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class PasswordReset {
     @Id
-    @GeneratedValue
     private String token;
     private Timestamp tokenCreation;
     @ManyToOne

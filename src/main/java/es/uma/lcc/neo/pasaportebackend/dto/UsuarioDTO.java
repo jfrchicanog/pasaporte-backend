@@ -1,7 +1,10 @@
 package es.uma.lcc.neo.pasaportebackend.dto;
 
+import es.uma.lcc.neo.pasaportebackend.entity.Rol;
 import es.uma.lcc.neo.pasaportebackend.entity.Usuario;
 import lombok.*;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -11,8 +14,9 @@ public class UsuarioDTO extends UsuarioNuevoDTO {
 	private Long id;
 
 	@Builder
-	public UsuarioDTO(Long id, String nombre, String apellido1, String apellido2, String email, String password, Boolean administrador) {
-		super(nombre, apellido1, apellido2, email, password, administrador);
+	public UsuarioDTO(Long id, String nombre, String apellido1, String apellido2,
+					  String email, String password, Set<Rol> roles) {
+		super(nombre, apellido1, apellido2, email, password, roles);
 		this.id = id;
 	}
 
@@ -23,6 +27,7 @@ public class UsuarioDTO extends UsuarioNuevoDTO {
 				.apellido1(usuario.getApellido1())
 				.apellido2(usuario.getApellido2())
 				.email(usuario.getEmail())
+				.roles(usuario.getRoles())
 				.build();
 	}
 
@@ -34,7 +39,7 @@ public class UsuarioDTO extends UsuarioNuevoDTO {
 				.apellido2(getApellido2())
 				.email(getEmail())
 				.hashContrasenia(getPassword())
-
+				.roles(getRoles())
 				.build();
 	}
 }

@@ -4,6 +4,7 @@ import es.uma.lcc.neo.pasaportebackend.dto.PasaporteDTO;
 import es.uma.lcc.neo.pasaportebackend.dto.SeccionDTO;
 import es.uma.lcc.neo.pasaportebackend.entity.Pasaporte;
 import es.uma.lcc.neo.pasaportebackend.entity.Seccion;
+import es.uma.lcc.neo.pasaportebackend.util.Util;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.Charset;
@@ -22,7 +23,8 @@ public class Mapper {
                 .apellido1(pasaporte.getApellido1())
                 .apellido2(pasaporte.getApellido2())
                 .fechaNacimiento(pasaporte.getFechaNacimiento())
-                .foto(new String(pasaporte.getFoto(), StandardCharsets.UTF_8))
+                .foto(
+                    Util.nullableTransform(pasaporte.getFoto(), f->new String(f, StandardCharsets.UTF_8)))
                 .secciones(
                     Optional.ofNullable(pasaporte.getSecciones())
                         .map(secciones -> secciones.stream()
@@ -48,7 +50,9 @@ public class Mapper {
                 .apellido1(pasaporte.getApellido1())
                 .apellido2(pasaporte.getApellido2())
                 .fechaNacimiento(pasaporte.getFechaNacimiento())
-                .foto(pasaporte.getFoto().getBytes(StandardCharsets.UTF_8))
+                .foto(
+                    Util.nullableTransform(pasaporte.getFoto(), f->f.getBytes(StandardCharsets.UTF_8))
+                )
                 .secciones(
                     Optional.ofNullable(pasaporte.getSecciones())
                         .map(secciones -> secciones.stream()

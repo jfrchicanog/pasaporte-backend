@@ -10,7 +10,7 @@
     </parent>
     <groupId>es.uma.lcc.neo</groupId>
     <artifactId>pasaporte-backend</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>pasaporte-backend</name>
     <description>pasaporte-backend</description>
     <url/>
@@ -77,6 +77,10 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
     </dependencies>
 

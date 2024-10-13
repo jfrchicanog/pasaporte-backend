@@ -10,6 +10,8 @@ import es.uma.lcc.neo.pasaportebackend.repository.PasswordResetRepo;
 import es.uma.lcc.neo.pasaportebackend.repository.VisorRepo;
 import es.uma.lcc.neo.pasaportebackend.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,7 @@ public class UsuarioService {
     private final VisorRepo<Usuario> usuarioRepo;
     private final PasswordResetRepo passwordResetRepo;
     private final PasswordEncoder passwordEncoder;
+    private final JavaMailSender mailSender;
 
     private final JwtUtil jwtUtil;
     private final Logger log =Logger.getLogger(UsuarioService.class.getName());
@@ -40,14 +43,19 @@ public class UsuarioService {
     @Value("${passwordresettoken.expiration}")
     private long passwordResetTokenExpiration = 0;
 
+    @Value("${spring.mail.username}")
+    private String mailFrom;
+
     public UsuarioService(VisorRepo<Usuario> usuarioRepo,
                           PasswordEncoder passwordEncoder,
                           PasswordResetRepo passwordResetRepo,
-                          JwtUtil jwtUtil) {
+                          JwtUtil jwtUtil,
+                          JavaMailSender mailSender) {
         this.usuarioRepo = usuarioRepo;
         this.passwordEncoder = passwordEncoder;
         this.passwordResetRepo = passwordResetRepo;
         this.jwtUtil = jwtUtil;
+        this.mailSender = mailSender;
     }
 
     public Usuario save(Usuario usuario) {
@@ -66,16 +74,19 @@ public class UsuarioService {
             if (password == null || password.isEmpty()) {
                 password = generarPasswordAleatoria();
             }
+            usuario.setHashContrasenia(passwordEncoder.encode(password));
         } else {
             // Actualizar usuario
             Usuario u = usuarioRepo.findById(usuario.getId())
                     .orElseThrow(() -> new UsuarioInexistente(usuario));
             password = usuario.getHashContrasenia();
             if (password == null || password.isEmpty()) {
-                password = u.getHashContrasenia();
+                usuario.setHashContrasenia(u.getHashContrasenia());
+            } else {
+                usuario.setHashContrasenia(passwordEncoder.encode(password));
             }
         }
-        usuario.setHashContrasenia(passwordEncoder.encode(password));
+
         return usuarioRepo.save(usuario);
     }
 
@@ -165,6 +176,8 @@ public class UsuarioService {
     }
 
     private void enviarMensajeParaReiniciarContrasnia(String email, String token) {
+        log.fine("Enviando mensaje de correo a "+email);
+
         String uri = UriComponentsBuilder.fromHttpUrl(baseURIOfFrontend+"/reset-password")
                 .queryParam("token", token)
                 .build().toUriString();
@@ -177,8 +190,16 @@ public class UsuarioService {
         mensaje.append(uri);
         mensaje.append(" Si el enlace no funciona, copie y pegue la dirección en su navegador. \n");
         mensaje.append("Saludos cordiales,\n");
-        mensaje.append("Equipo técnico de Entrenamientos Deportivos");
-        log.info(mensaje.toString());
+        mensaje.append("Equipo técnico de Pasaporte Educativo y Clínico de Comunicación");
+
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setFrom(mailFrom);
+        mail.setTo(email);
+        mail.setSubject("[PECCO] Restablecimiento de contraseña.");
+        mail.setText(mensaje.toString());
+        mailSender.send(mail);
+
+        log.fine(mensaje.toString());
     }
 
 

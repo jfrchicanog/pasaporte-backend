@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +23,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/")
 @RestController
 @CrossOrigin()
+@Slf4j
 @Tag(name="Gestión de usuarios", description="Operaciones para la gestión de usuarios")
 public class LoginPasswordManagement {
+
 
     private UsuarioService usuarioService;
 
@@ -60,6 +64,7 @@ public class LoginPasswordManagement {
             },
             security = {@SecurityRequirement(name = "public")})
     public ResponseEntity passwordReset(@RequestBody PasswordResetDTO passwordReset) {
+        log.info("Entrando en passwordreset");
         usuarioService.passwordReset(passwordReset.getToken(), passwordReset.getPassword());
         return ResponseEntity.ok().build();
     }

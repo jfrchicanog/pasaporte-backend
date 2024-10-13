@@ -1,7 +1,10 @@
 package es.uma.lcc.neo.pasaportebackend.dto;
 
+import es.uma.lcc.neo.pasaportebackend.entity.Rol;
 import es.uma.lcc.neo.pasaportebackend.entity.Usuario;
 import lombok.*;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -14,7 +17,7 @@ public class UsuarioNuevoDTO {
 	private String apellido2;
 	private String email;
 	private String password;
-	private Boolean administrador;
+	private Set<Rol> roles;
 
 	public Usuario toEntity() {
 		return Usuario.builder()
@@ -22,6 +25,7 @@ public class UsuarioNuevoDTO {
 				.apellido1(this.apellido1)
 				.apellido2(this.apellido2)
 				.email(this.email)
+				.roles(this.roles)
 				.hashContrasenia(this.password)
 				.build();
 	}
